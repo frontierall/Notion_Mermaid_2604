@@ -470,7 +470,6 @@ ${colorGuides[typeId] || ''}
 Content:
 ${text}`;
   };
-  };
 
   try {
     buildResultItems(selectedTypes);
@@ -576,7 +575,7 @@ async function renderDiagram(code, typeId, retryCount = 0) {
     
     setZoom(typeId, zoomLevels[typeId] || 1);
   } catch (e) {
-    // ... 기존 에러 처리 유지 ...
+    if (retryCount < 1) {
       output.innerHTML = `<div style="color:#a78bfa;font-size:0.85rem"><span class="loader"></span> 오류 감지 → 자동 수정 중... (${retryCount + 1}/2)</div>`;
       try {
         const fixed = await fixMermaidCode(code, e.message, typeId);
