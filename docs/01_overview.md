@@ -8,7 +8,9 @@
 
 ```
 Notion_Mermaid_2604/
-├── index.html        # 단일 파일 앱 (HTML + CSS + JS 통합)
+├── index.html        # HTML 마크업
+├── styles.css        # 전역 스타일/테마
+├── app.js            # 애플리케이션 로직
 ├── README.md         # 전체 문서
 └── docs/
     ├── 01_overview.md

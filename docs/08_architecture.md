@@ -6,7 +6,8 @@
 index.html
 ├── <head>
 │   ├── Mermaid.js 10.6.1 (CDN)
-│   └── <style> CSS 변수 + 전체 스타일
+│   ├── styles.css (외부 스타일)
+│   └── app.js (defer, 외부 로직)
 └── <body>
     ├── .app (max-width: 900px 컨테이너)
     │   ├── 헤더 + 테마 토글 버튼
@@ -15,8 +16,7 @@ index.html
     │   ├── #typeSection    — 다이어그램 유형 선택 (Step 2)
     │   ├── #outputSection  — 결과 표시 (Step 3)
     │   └── #statusMsg      — 로딩 상태 메시지
-    ├── #fsModal            — 전체화면 모달 (전역)
-    └── <script>            — 전체 애플리케이션 로직
+    └── #fsModal            — 전체화면 모달 (전역)
 ```
 
 ## 주요 전역 상태
@@ -26,7 +26,7 @@ index.html
 | `selectedTypes` | `string[]` | `[]` | 선택된 다이어그램 ID (최대 3개) |
 | `currentCodes` | `object` | `{}` | 생성된 Mermaid 코드 (`typeId → code`) |
 | `zoomLevels` | `object` | `{}` | 줌 레벨 (`typeId → number`) |
-| `analysisResult` | `object\|null` | `null` | AI 분석 결과 (추천 순서, 이유) |
+| `analysisResult` | `object \| null` | `null` | AI 분석 결과 (추천 순서, 이유) |
 | `apiKey` | `string` | `''` | 현재 세션 API 키 (메모리만) |
 | `provider` | `string` | `'claude'` | 선택된 AI 공급자 |
 

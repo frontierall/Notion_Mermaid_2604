@@ -1,6 +1,6 @@
 # AI Mermaid 다이어그램 생성기
 
-텍스트를 입력하면 AI가 내용을 분석하여 Mermaid 다이어그램을 자동으로 생성하고 시각화해주는 단일 파일 웹 앱입니다.
+텍스트를 입력하면 AI가 내용을 분석하여 Mermaid 다이어그램을 자동으로 생성하고 시각화해주는 정적 웹 앱입니다.
 
 ---
 
@@ -137,7 +137,9 @@ API 키는 브라우저 메모리에만 저장되며 탭을 닫으면 사라집�
 
 ```
 Notion_Mermaid_2604/
-├── index.html        # 단일 파일 앱 (HTML + CSS + JS 통합)
+├── index.html        # HTML 마크업
+├── styles.css        # 전역 스타일/테마
+├── app.js            # 애플리케이션 로직
 ├── README.md         # 이 파일
 └── docs/
     ├── 01_overview.md          # 프로그램 개요 및 기술 스택
