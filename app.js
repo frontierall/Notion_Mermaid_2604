@@ -427,6 +427,16 @@ Each task line: taskName : status, startDate, duration`,
 
   const buildPrompt = typeId => {
     const isLow = getDetailLevel() === 'low';
+    const isOpenAI = provider === 'openai';
+
+    // OpenAI/기타 모델에서 자주 발생하는 문법 오류 방지용 강제 지침
+    const modelStrictRules = isOpenAI 
+      ? `\n### STRICT SYNTAX ENFORCEMENT FOR THIS MODEL:
+- Every property inside a { block } MUST have a colon followed by a space (e.g., id: R1, NOT id R1).
+- String values for 'text', 'docref', 'type' MUST be in double quotes.
+- Ensure every opening { has a corresponding closing } on a new line.`
+      : '';
+
     const summaryGuide = isLow 
       ? `### VISUALIZATION STRATEGY: BEGINNER-FRIENDLY SUMMARY
 - Goal: Create a CLEAR, SIMPLE diagram for someone who knows nothing about this topic.
@@ -442,6 +452,7 @@ Each task line: taskName : status, startDate, duration`,
 
     return `You are a Mermaid expert and Information Architect.
 Generate ONLY valid raw Mermaid ${typeId} code.
+${modelStrictRules}
 
 ${summaryGuide}
 
@@ -451,13 +462,14 @@ CRITICAL RULES:
 3. Wrap labels with special characters (+, -, :, /) in double quotes: id["Text + Here"].
 4. First line must be exactly "${typeId === 'flowchart' ? 'flowchart LR' : typeId}".
 5. NO markdown, NO explanation, NO backticks.
-6. NEVER output JSON, JS objects, YAML, or key-value blocks on a single line (e.g. "{ id: R1 text: ... }").
+6. NEVER output JSON, JS objects, YAML, or key-value blocks on a single line.
 
 DIAGRAM-SPECIFIC RULES:
 ${colorGuides[typeId] || ''}
 
 Content:
 ${text}`;
+  };
   };
 
   try {
@@ -552,9 +564,19 @@ async function renderDiagram(code, typeId, retryCount = 0) {
     const id = 'mermaid_' + typeId + '_' + Date.now();
     const { svg } = await mermaid.render(id, code);
     output.innerHTML = `<div class="zoom-wrap" id="zoomWrap_${typeId}">${svg}</div>`;
+    
+    // 내용에 따라 높이 자동 조절 (최소 300px, 최대 600px)
+    requestAnimationFrame(() => {
+      const svgEl = output.querySelector('svg');
+      if (svgEl) {
+        const h = svgEl.getBoundingClientRect().height + 48; // 여유 공간 포함
+        output.style.height = Math.min(600, Math.max(300, h)) + 'px';
+      }
+    });
+    
     setZoom(typeId, zoomLevels[typeId] || 1);
   } catch (e) {
-    if (retryCount < 2) {
+    // ... 기존 에러 처리 유지 ...
       output.innerHTML = `<div style="color:#a78bfa;font-size:0.85rem"><span class="loader"></span> 오류 감지 → 자동 수정 중... (${retryCount + 1}/2)</div>`;
       try {
         const fixed = await fixMermaidCode(code, e.message, typeId);
